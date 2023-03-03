@@ -22,9 +22,10 @@ public class SaveData {
 
     private static final int SAVE_VERSION = 0;
 
-    private SaveData(JavaPlugin plugin, Team[] teams) {
+    private SaveData(JavaPlugin plugin, Team[] teams, Path filePath) {
         this.plugin = plugin;
         this.teams = teams;
+        this.filePath = filePath;
 
         players = new HashMap<UUID, LimitedLifePlayer>();
     }
@@ -62,9 +63,10 @@ public class SaveData {
     }
 
     public static SaveData tryReadData(String filePath, JavaPlugin plugin, Team[] teams) {
-        SaveData sData = new SaveData(plugin, teams);
-
         Path path = Paths.get(Bukkit.getServer().getWorldContainer().getAbsolutePath(), filePath);
+
+        SaveData sData = new SaveData(plugin, teams, path);
+
         if (!path.toFile().exists()) {
             return sData;
         }
@@ -76,8 +78,6 @@ public class SaveData {
             e.printStackTrace();
             return sData;
         }
-
-        sData.filePath = path;
 
         String[] parts = data.split("\n");
         int saveFormat = Integer.valueOf(parts[0]);

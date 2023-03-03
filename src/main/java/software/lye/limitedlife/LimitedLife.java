@@ -50,7 +50,7 @@ public final class LimitedLife extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        saveData.commitData();
     }
 
     @Override
