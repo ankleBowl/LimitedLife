@@ -1,5 +1,6 @@
 package software.lye.limitedlife;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -120,6 +121,15 @@ public class LimitedLifePlayer {
         fullDead = true;
         getPlayer().setGameMode(GameMode.SPECTATOR);
         getPlayer().sendMessage(ChatColor.GRAY + "You are dead! You can still spectate the game.");
+    }
+
+    public String getSaveString() {
+        commitTimeAlive();
+        String output = "";
+        output += playerUUID.toString() + ",";
+        output += timeSpentOnline + ",";
+        output += Boolean.valueOf(fullDead);
+        return output;
     }
 
     public Player getPlayer() {
