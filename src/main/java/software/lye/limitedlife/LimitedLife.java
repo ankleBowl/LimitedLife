@@ -35,17 +35,15 @@ public final class LimitedLife extends JavaPlugin implements Listener {
         Bukkit.getLogger().info("Initialized LimitedLife");
 
         scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
-
         teams = new Team[4];
-        teams[0] = scoreboard.registerNewTeam("Green");
-        teams[1] = scoreboard.registerNewTeam("Yellow");
-        teams[2] = scoreboard.registerNewTeam("Red");
-        teams[3] = scoreboard.registerNewTeam("Black");
 
-        teams[0].setColor(ChatColor.GREEN);
-        teams[1].setColor(ChatColor.YELLOW);
-        teams[2].setColor(ChatColor.RED);
-        teams[3].setColor(ChatColor.BLACK);
+        for (int i = 0; i < 4; i++) {
+            if (scoreboard.getTeam(String.valueOf(i)) == null) {
+                Team temp = scoreboard.registerNewTeam(String.valueOf(i));
+                temp.setColor(Config.COLORS[i]);
+            }
+            teams[i] = scoreboard.getTeam(String.valueOf(i));
+        }
 
         saveData = SaveData.tryReadData("save.limls", this, teams);
     }
