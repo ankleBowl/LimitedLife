@@ -77,10 +77,12 @@ public class LimitedLifePlayer {
         switch (nextEventId) {
             case 3:
                 setFullDead();
-                break;
+                setColor(nextEventId);
+                return;
             default:
                 setColor(nextEventId);
                 break;
+
         }
 
         Bukkit.broadcastMessage("Next event ID is " + nextEventId);
