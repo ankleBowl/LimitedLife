@@ -118,6 +118,11 @@ public class LimitedLifePlayer {
         return timeSpentOnline;
     }
 
+    public long getTimeRemaining() {
+        commitTimeAlive();
+        return Config.EVENTS[Config.EVENTS.length - 1] - timeSpentOnline;
+    }
+
     public void setFullDead() {
         fullDead = true;
         getPlayer().setGameMode(GameMode.SPECTATOR);

@@ -3,3 +3,5 @@ version: '${project.version}'
 main: software.lye.limitedlife.LimitedLife
 api-version: 1.19
 authors: [ ankleBowl ]
+commands:
+  time:

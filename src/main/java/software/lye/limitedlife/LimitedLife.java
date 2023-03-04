@@ -55,6 +55,19 @@ public final class LimitedLife extends JavaPlugin implements Listener {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (sender instanceof Player) {
+            if (command.getLabel().equalsIgnoreCase("time")) {
+                LimitedLifePlayer player = saveData.getPlayer(((Player) sender).getUniqueId());
+
+                long milliseconds = player.getTimeRemaining();
+
+                int seconds = (int) (milliseconds / 1000) % 60 ;
+                int minutes = (int) ((milliseconds / (1000*60)) % 60);
+                int hours   = (int) ((milliseconds / (1000*60*60)) % 24);
+
+                sender.sendMessage(ChatColor.YELLOW + "You have " + hours + " hours(s), " + minutes + " minute(s), and " + seconds + " second(s) left!");
+            }
+        }
         return false;
     }
 
@@ -88,26 +101,26 @@ public final class LimitedLife extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        if (!(event.getEntity() instanceof Player && event.getDamager() instanceof Player)) {
-            return;
-        }
-
-        Player hurt0 = (Player) event.getEntity();
-        Player damager0 = (Player) event.getDamager();
-
-        if (hurt0 == damager0) {
-            return;
-        }
-
-        LimitedLifePlayer hurt = saveData.getPlayer(hurt0.getUniqueId());
-        LimitedLifePlayer damager = saveData.getPlayer(damager0.getUniqueId());
-
-        if (damager.getIndex() == 2) {
-            return;
-        }
-        if (damager.getIndex() < hurt.getIndex()) {
-            return;
-        }
-        event.setCancelled(true);
+//        if (!(event.getEntity() instanceof Player && event.getDamager() instanceof Player)) {
+//            return;
+//        }
+//
+//        Player hurt0 = (Player) event.getEntity();
+//        Player damager0 = (Player) event.getDamager();
+//
+//        if (hurt0 == damager0) {
+//            return;
+//        }
+//
+//        LimitedLifePlayer hurt = saveData.getPlayer(hurt0.getUniqueId());
+//        LimitedLifePlayer damager = saveData.getPlayer(damager0.getUniqueId());
+//
+//        if (damager.getIndex() == 2) {
+//            return;
+//        }
+//        if (damager.getIndex() > hurt.getIndex()) {
+//            return;
+//        }
+//        event.setCancelled(true);
     }
 }
