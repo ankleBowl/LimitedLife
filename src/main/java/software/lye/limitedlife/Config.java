@@ -12,12 +12,12 @@ public class Config {
     public static void init() {
         EVENTS = new long[3];
 
-        EVENTS[0] = 15000; //NAME TURNS YELLOW
-        EVENTS[1] = 15000 * 2; //NAME TURNS RED
-        EVENTS[2] = 15000 * 3; //DEATH
+        EVENTS[0] = 240000; //NAME TURNS YELLOW
+        EVENTS[1] = 240000 * 2; //NAME TURNS RED
+        EVENTS[2] = 240000 * 3; //DEATH
 
-        DEATH_PENALTY = 3595000;
-        KILL_REWARD = 1800000;
+        DEATH_PENALTY = 60000;
+        KILL_REWARD = 30000;
 
         COLORS = new ChatColor[4];
         COLORS[0] = ChatColor.GREEN;

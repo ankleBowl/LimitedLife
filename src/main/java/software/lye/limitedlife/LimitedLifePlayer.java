@@ -24,6 +24,7 @@ public class LimitedLifePlayer {
     private JavaPlugin plugin;
     private int nextEventId;
     private Team[] teams;
+    private int index;
 
 
     public LimitedLifePlayer(UUID uuid, long timeSpentOnline, boolean fullDead, JavaPlugin plugin, Team[] teams) {
@@ -138,5 +139,9 @@ public class LimitedLifePlayer {
 
     public void setColor(int index) {
         teams[index].addPlayer(getPlayer());
+    }
+
+    public int getIndex() {
+        return nextEventId;
     }
 }

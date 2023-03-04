@@ -85,4 +85,29 @@ public final class LimitedLife extends JavaPlugin implements Listener {
             }
         }
     }
+
+    @EventHandler
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+        if (!(event.getEntity() instanceof Player && event.getDamager() instanceof Player)) {
+            return;
+        }
+
+        Player hurt0 = (Player) event.getEntity();
+        Player damager0 = (Player) event.getDamager();
+
+        if (hurt0 == damager0) {
+            return;
+        }
+
+        LimitedLifePlayer hurt = saveData.getPlayer(hurt0.getUniqueId());
+        LimitedLifePlayer damager = saveData.getPlayer(damager0.getUniqueId());
+
+        if (damager.getIndex() == 2) {
+            return;
+        }
+        if (damager.getIndex() < hurt.getIndex()) {
+            return;
+        }
+        event.setCancelled(true);
+    }
 }
