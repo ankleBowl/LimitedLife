@@ -62,13 +62,13 @@ public class SaveData {
         return player;
     }
 
-    public static SaveData tryReadData(String filePath, JavaPlugin plugin, Team[] teams) {
+    public static SaveData readData(String filePath, JavaPlugin plugin, Team[] teams) {
         Path path = Paths.get(Bukkit.getServer().getWorldContainer().getAbsolutePath(), filePath);
 
         SaveData sData = new SaveData(plugin, teams, path);
 
         if (!path.toFile().exists()) {
-            return sData;
+            return null;
         }
 
         String data = "";
@@ -76,7 +76,7 @@ public class SaveData {
             data = new String(Files.readAllBytes(path));
         } catch (Exception e) {
             e.printStackTrace();
-            return sData;
+            return null;
         }
 
         String[] parts = data.split("\n");
@@ -93,5 +93,10 @@ public class SaveData {
                 break;
         }
         return sData;
+    }
+
+    public static SaveData createData(String filePath, JavaPlugin plugin, Team[] teams) {
+        Path path = Paths.get(Bukkit.getServer().getWorldContainer().getAbsolutePath(), filePath);
+        return new SaveData(plugin, teams, path);
     }
 }

@@ -14,6 +14,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
@@ -23,7 +24,6 @@ import java.util.UUID;
 public final class LimitedLife extends JavaPlugin implements Listener {
 
     public SaveData saveData;
-
     public Team[] teams;
     public Scoreboard scoreboard;
 
@@ -45,7 +45,7 @@ public final class LimitedLife extends JavaPlugin implements Listener {
             teams[i] = scoreboard.getTeam(String.valueOf(i));
         }
 
-        saveData = SaveData.tryReadData("save.limls", this, teams);
+        saveData = SaveData.readData("save.limls", this, teams);
     }
 
     @Override
@@ -57,6 +57,9 @@ public final class LimitedLife extends JavaPlugin implements Listener {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             if (command.getLabel().equalsIgnoreCase("time")) {
+                if (saveData == null) {
+                    sender.sendMessage(ChatColor.RED + "The game has not been started yet!");
+                }
                 LimitedLifePlayer player = saveData.getPlayer(((Player) sender).getUniqueId());
 
                 long milliseconds = player.getTimeRemaining();
@@ -66,6 +69,21 @@ public final class LimitedLife extends JavaPlugin implements Listener {
                 int hours   = (int) ((milliseconds / (1000*60*60)) % 24);
 
                 sender.sendMessage(ChatColor.YELLOW + "You have " + hours + " hours(s), " + minutes + " minute(s), and " + seconds + " second(s) left!");
+                return true;
+            }
+
+            if (command.getLabel().equalsIgnoreCase("start")) {
+                startingCountdown();
+
+                new BukkitRunnable() {
+                    public void run() {
+                        saveData = SaveData.createData("save.limls", this, teams);
+                        for (Player p : Bukkit.getOnlinePlayers()) {
+                            LimitedLifePlayer llp = saveData.getPlayer(p.getUniqueId());
+                            llp.join();
+                        }
+                    }
+                }.runTaskLater(this, 60);
             }
         }
         return false;
@@ -73,6 +91,7 @@ public final class LimitedLife extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
+        if (saveData == null) { return; }
         LimitedLifePlayer player = saveData.getPlayer(event.getPlayer().getUniqueId());
         player.getPlayer().setScoreboard(scoreboard);
         player.join();
@@ -80,12 +99,14 @@ public final class LimitedLife extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
+        if (saveData == null) { return; }
         LimitedLifePlayer player = saveData.getPlayer(event.getPlayer().getUniqueId());
         player.disconnect();
     }
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
+        if (saveData == null) { return; }
         UUID playerUUID = event.getEntity().getUniqueId();
         saveData.getPlayer(playerUUID).died();
 
@@ -122,5 +143,23 @@ public final class LimitedLife extends JavaPlugin implements Listener {
 //            return;
 //        }
 //        event.setCancelled(true);
+    }
+
+    public void startingCountdown() {
+        String[] messages = {
+                ChatColor.GREEN + "3",
+                ChatColor.YELLOW + "2",
+                ChatColor.RED + "1",
+                ChatColor.GREEN + "The timer has begun!"
+        }
+        for (int i = 0; i < 4; i++) {
+            new BukkitRunnable() {
+                public void run() {
+                    for (Player p : Bukkit.getOnlinePlayers()) {
+                        p.sendTitle(messages[i]);
+                    }
+                }
+            }.runTaskLater(this, i * 20);
+        }
     }
 }
