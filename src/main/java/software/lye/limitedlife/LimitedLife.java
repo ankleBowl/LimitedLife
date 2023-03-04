@@ -27,8 +27,12 @@ public final class LimitedLife extends JavaPlugin implements Listener {
     public Team[] teams;
     public Scoreboard scoreboard;
 
+    public static JavaPlugin plugin;
+
     @Override
     public void onEnable() {
+        plugin = this;
+
         Config.init();
         Bukkit.getPluginManager().registerEvents(this, this);
 
@@ -77,7 +81,7 @@ public final class LimitedLife extends JavaPlugin implements Listener {
 
                 new BukkitRunnable() {
                     public void run() {
-                        saveData = SaveData.createData("save.limls", this, teams);
+                        saveData = SaveData.createData("save.limls", LimitedLife.plugin, teams);
                         for (Player p : Bukkit.getOnlinePlayers()) {
                             LimitedLifePlayer llp = saveData.getPlayer(p.getUniqueId());
                             llp.join();
@@ -153,10 +157,11 @@ public final class LimitedLife extends JavaPlugin implements Listener {
                 ChatColor.GREEN + "The timer has begun!"
         }
         for (int i = 0; i < 4; i++) {
+            final String message = messages[i];
             new BukkitRunnable() {
                 public void run() {
                     for (Player p : Bukkit.getOnlinePlayers()) {
-                        p.sendTitle(messages[i]);
+                        p.sendTitle(message, "");
                     }
                 }
             }.runTaskLater(this, i * 20);
