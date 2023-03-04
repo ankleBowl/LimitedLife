@@ -1,6 +1,8 @@
 package software.lye.limitedlife;
 
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.Configuration;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class Config {
 
@@ -9,20 +11,25 @@ public class Config {
     public static long KILL_REWARD;
     public static ChatColor[] COLORS;
 
-    public static void init() {
+    public static void init(JavaPlugin plugin) {
+        plugin.saveDefaultConfig();
+
+        Configuration config = plugin.getConfig();
+        config.options().copyDefaults();
+
         EVENTS = new long[3];
 
-        EVENTS[0] = 240000; //NAME TURNS YELLOW
-        EVENTS[1] = 240000 * 2; //NAME TURNS RED
-        EVENTS[2] = 240000 * 3; //DEATH
+        EVENTS[0] = config.getLong("times.name_turns_yellow_ms");
+        EVENTS[1] = config.getLong("times.name_turns_red_ms");
+        EVENTS[2] = config.getLong("times.death_ms");
 
-        DEATH_PENALTY = 60000;
-        KILL_REWARD = 30000;
+        KILL_REWARD = config.getLong("kill_reward");
+        DEATH_PENALTY = config.getLong("death_penalty");
 
         COLORS = new ChatColor[4];
-        COLORS[0] = ChatColor.GREEN;
-        COLORS[1] = ChatColor.YELLOW;
-        COLORS[2] = ChatColor.RED;
-        COLORS[3] = ChatColor.BLACK;
+        COLORS[0] = ChatColor.valueOf(String.valueOf(config.getInt("colors.full_time")));
+        COLORS[1] = ChatColor.valueOf(String.valueOf(config.getInt("colors.first")));
+        COLORS[2] = ChatColor.valueOf(String.valueOf(config.getInt("colors.second")));
+        COLORS[3] = ChatColor.valueOf(String.valueOf(config.getInt("colors.death")));
     }
 }

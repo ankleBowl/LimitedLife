@@ -1,0 +1,11 @@
+times:
+  name_turns_yellow_ms: 240000
+  name_turns_red_ms: 480000
+  death_ms: 720000
+kill_reward: 30000
+death_penalty: 60000
+colors:
+  full_time: 10
+  first: 14
+  second: 12
+  death: 0

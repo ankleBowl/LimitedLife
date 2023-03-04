@@ -33,7 +33,7 @@ public final class LimitedLife extends JavaPlugin implements Listener {
     public void onEnable() {
         plugin = this;
 
-        Config.init();
+        Config.init(this);
         Bukkit.getPluginManager().registerEvents(this, this);
 
         Bukkit.getLogger().info("Initialized LimitedLife");
@@ -155,7 +155,7 @@ public final class LimitedLife extends JavaPlugin implements Listener {
                 ChatColor.YELLOW + "2",
                 ChatColor.RED + "1",
                 ChatColor.GREEN + "The timer has begun!"
-        }
+        };
         for (int i = 0; i < 4; i++) {
             final String message = messages[i];
             new BukkitRunnable() {
